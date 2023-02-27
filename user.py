@@ -161,4 +161,12 @@ loginButton.grid(row=1,column=0,pady=15,padx=20)
 exitButton=ttk.Button(root,text='Exit',width=25,command=iexit)
 exitButton.grid(row=4,column=0,pady=15,padx=20)
 
+root=ttkthemes.ThemedTk()
+root.get_themes()
+root.set_theme('radiance')
+
+root.geometry('300x350+450+300')
+root.resizable(0,0)
+root.title('User window')
+
 root.mainloop()
