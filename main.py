@@ -70,6 +70,5 @@ userButton = Button(loginframe1,text='User',compound=CENTER,font=('times new rom
 userButton.grid(row=1,column=0,pady=10)
 
 
-
 window.mainloop()
 

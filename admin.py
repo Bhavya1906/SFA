@@ -7,7 +7,7 @@ from random import randint
 
 try:
     client = pymongo.MongoClient("mongodb+srv://Bhavya:Ammulu1906@cluster0.7zd38m0.mongodb.net/?retryWrites=true&w=majority")
-    db = client.SoilFarming
+    db = client.SFA
     print("Connected to MongoDB")
 except:
     print("Database connection Error ")
@@ -25,22 +25,19 @@ def iexit():
 def soil_det(root,db):
     def post_data():
         global root
-        SNE = serialnoEntry.get()
         ToS = typeofsoilEntry.get()
         CRE = cropsgrownEntry.get()
         WTG = whentogrowEntry.get()
         NE = nutrientEntry.get()
         DOE = dryingoutEntry.get()
         WRE = waterretentionEntry.get()
-        S.Nun = [SNE]
         Type_of_Soil =[ToS]
         Crops_grown = [CRE]
         When_to_grow = [WTG]
         Nutrient_Content = [NE]
         Drying_out = [DOE]
         Water_retention = [WRE]
-        SoilFarming={
-            'S.Num':S.Num[randint(0, (len(S.Num) - 1))],
+        SFA={
             'Type_of_Soil':Type_of_Soil[randint(0, (len(Type_of_Soil) - 1))],
             'Crops_grown':Crops_grown[randint(0, (len(Crops_grown) - 1))],
             'When_to_grow':When_to_grow[randint(0, (len(When_to_grow) - 1))],
@@ -48,9 +45,6 @@ def soil_det(root,db):
             'Drying_out':Drying_out[randint(0, len(Drying_out) - 1)],
             'Water_retention':Water_retention[randint(0, len(Water_retention) - 1)]
         }
-        if (len(S.Num)==0):
-            messagebox.showwarning('Warning','Fields cannot be empty(Except:When_to_grow)')
-            return
         if (len(Type_of_Soil)==0):
             messagebox.showwarning('Warning','Fields cannot be empty(Except:When_to_grow)')
             return
@@ -66,12 +60,12 @@ def soil_det(root,db):
         if (len(Water_retention)==0):
             messagebox.showwarning('Warning','Fields cannot be empty(Except:When_to_grow)')
             return
-        if len(When_to_grow)==0 and db.details.count_documents({'S.Num':SNE}, limit=1)==0:
+        if len(When_to_grow)==0 and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
             result = db.details.insert_one(
-                {'S.Num':SNE, 'Type_of_soil': ToS, 'Crops_grown': CRE, 'When_to_grow': WTG, 'Nutrient_Content': NE,
+                {'Type_of_soil': ToS, 'Crops_grown': CRE, 'When_to_grow': WTG, 'Nutrient_Content': NE,
                  'Drying_out': DOE, 'Water_retention': WRE})
-        elif len(When_to_grow)!=0and db.details.count_documents({'S.Num':SNE}, limit=1)==0:
-            result = db.details.insert_one(SoilFarming)
+        elif len(When_to_grow)!=0and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
+            result = db.details.insert_one(SFA)
             messagebox.showinfo('Success','Data added successfully')
 
         else:
@@ -81,81 +75,69 @@ def soil_det(root,db):
     new.geometry('530x450')
     new.resizable(0,0)
     new.title('Soil info')
-    serialnolabel=Label(new,text='S.Num',font=('times new roman',20,'bold'))
-    serialnolabel.grid(row=0,column=0,pady=10,padx=10)
-    serialnoEntry=Entry(new,font=('calibri',15))
-    serialnoEntry.grid(row=0,column=1,pady=10,padx=10)
 
     typeofsoillabel=Label(new,text='Type_of_Soil',font=('times new roman',20,'bold'))
-    typeofsoillabel.grid(row=1,column=0,pady=10,padx=10)
+    typeofsoillabel.grid(row=0,column=0,pady=10,padx=10)
     typeofsoilEntry=Entry(new,font=('calibri',15))
-    typeofsoilEntry.grid(row=1,column=1,pady=10,padx=10)
+    typeofsoilEntry.grid(row=0,column=1,pady=10,padx=10)
 
     cropsgrownlabel=Label(new,text='Crops_grown',font=('times new roman',20,'bold'))
-    cropsgrownlabel.grid(row=2,column=0,pady=10,padx=10)
+    cropsgrownlabel.grid(row=1,column=0,pady=10,padx=10)
     cropsgrownEntry=Entry(new,font=('calibri',15))
-    cropsgrownEntry.grid(row=2,column=1,pady=10,padx=10)
+    cropsgrownEntry.grid(row=1,column=1,pady=10,padx=10)
 
     nutrientlabel=Label(new,text='Nutrient_content',font=('times new roman',20,'bold'))
-    nutrientlabel.grid(row=3,column=0,pady=10,padx=10)
+    nutrientlabel.grid(row=2,column=0,pady=10,padx=10)
     nutrientEntry=Entry(new,font=('calibri',15))
-    nutrientEntry.grid(row=3,column=1,pady=10,padx=10)
+    nutrientEntry.grid(row=2,column=1,pady=10,padx=10)
 
     dryingoutlabel=Label(new,text='Drying_out',font=('times new roman',20,'bold'))
-    dryingoutlabel.grid(row=4,column=0,pady=10,padx=10)
+    dryingoutlabel.grid(row=3,column=0,pady=10,padx=10)
     dryingoutEntry=Entry(new,font=('calibri',15))
-    dryingoutEntry.grid(row=4,column=1,pady=10,padx=10)
+    dryingoutEntry.grid(row=3,column=1,pady=10,padx=10)
 
     waterretentionlabel=Label(new,text='Water_retention',font=('times new roman',20,'bold'))
-    waterretentionlabel.grid(row=5,column=0,pady=10,padx=10)
+    waterretentionlabel.grid(row=4,column=0,pady=10,padx=10)
     waterretentionEntry=Entry(new,font=('calibri',15))
-    waterretentionEntry.grid(row=5,column=1,pady=10,padx=10)
+    waterretentionEntry.grid(row=4,column=1,pady=10,padx=10)
 
     whentogrowlabel=Label(new,text='When_to_grow',font=('times new roman',20,'bold'))
-    whentogrowlabel.grid(row=6,column=0,pady=10,padx=10)
+    whentogrowlabel.grid(row=5,column=0,pady=10,padx=10)
     whentogrowEntry=Entry(new,font=('calibri',15))
-    whentogrowEntry.grid(row=6,column=1,pady=10,padx=10)
+    whentogrowEntry.grid(row=5,column=1,pady=10,padx=10)
 
     submitButton=ttk.Button(new,text='Submit',command=post_data)
-    submitButton.grid(row=7,columnspan=2)
+    submitButton.grid(row=6,columnspan=2)
 
 def update_soil(root,db):
     def update_data():
         global root
-        SNE = serialnoEntry.get()
         ToS = typeofsoilEntry.get()
         CRE = cropsgrownEntry.get()
         WTG = whentogrowEntry.get()
         NE = nutrientEntry.get()
         DOE = dryingoutEntry.get()
         WRE = waterretentionEntry.get()
-        if len(SNE)==0:
-            messagebox.showwarning('Warning','Enter valid serial number')
-            return
-        if db.details.count_documents({'S.Num':SNE}, limit=1)==0:
+        if db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
             messagebox.showwarning('Error','Serial does not exist')
             return
         if len(ToS)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'Type_of_soil':ToS}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Type_of_soil':ToS}})
         if len(CRE)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'Crops_grown':CRE}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Crops_grown':CRE}})
         if len(WTG)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'When_to_grow':WTG}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'When_to_grow':WTG}})
         if len(NE)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'Nutrient_Content':NE}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Nutrient_Content':NE}})
         if len(DOE)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'Drying_out':DOE}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Drying_out':DOE}})
         if len(WRE)!=0:
-            db.details.update_one({'S.Num':SNE},{'$set':{'Water_retention':WRE}})
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Water_retention':WRE}})
             messagebox.showinfo("Success",'Info updated successfully')
     new1=Toplevel(root)
     new1.geometry('530x450')
     new1.resizable(0,0)
     new1.title('Update info')
-    serialnolabel=Label(new1,text='S.Num',font=('times new roman',20,'bold'))
-    serialnolabel.grid(row=0,column=0,pady=10,padx=10)
-    serialnoEntry=Entry(new1,font=('calibri',15))
-    serialnoEntry.grid(row=0,column=1,pady=10,padx=10)
 
     typeofsoillabel=Label(new1,text='Type_of_Soil',font=('times new roman',20,'bold'))
     typeofsoillabel.grid(row=1,column=0,pady=10,padx=10)
@@ -203,7 +185,7 @@ def dist_det(root,db):
         Contact = [contact]
         Gender = [gender]
         Place = [place]
-        SoilFarming={
+        SFA={
             'Name':Name[randint(0, (len(Name) - 1))],
             'Email':Email[randint(0, (len(Email) - 1))],
             'Contact':Contact[randint(0, (len(Contact) - 1))],
@@ -222,10 +204,10 @@ def dist_det(root,db):
         if (len(place)==0):
             messagebox.showwarning('warning','Fields cannot be empty(Except:Email)')
             return
-        if len(email)==0 and db.details.count_documents({'Id':id}, limit=1)==0:
-            result=db.details.insert_one({'Name':name,'Place':place,'Gender':gender,'Contact':contact})
-        elif len(email)!=0 and db.details.count_documents({'Name':name}, limit=1)==0:
-            result=db.details.insert_one(SoilFarming)
+        if len(email)==0 and db.details1.count_documents({'Id':id}, limit=1)==0:
+            result=db.details1.insert_one({'Name':name,'Place':place,'Gender':gender,'Contact':contact})
+        elif len(email)!=0 and db.details1.count_documents({'Name':name}, limit=1)==0:
+            result=db.details1.insert_one(SFA)
             messagebox.showinfo('Success','Data added successfully')
         else:
             messagebox.showerror('Error','All details are required')
@@ -274,17 +256,17 @@ def update_dist(rrot,db):
         if len(name)==0:
             messagebox.showwarning('Warning','Enter valid id')
             return
-        if db.details.count_documents({'Name':name},limit=1)==0:
-            messagebox.showwarning('Warning','Id does not exist')
+        if db.details1.count_documents({'Name':name},limit=1)==0:
+            messagebox.showwarning('Warning','Name does not match')
             return
         if len(email)!=0:
-            db.details.update_one({'Name':name},{'$set':{'Email':email}})
+            db.details1.update_one({'Name':name},{'$set':{'Email':email}})
         if len(contact)!=0:
-            db.details.update_one({'Name':name},{'$set':{'Contact':contact}})
+            db.details1.update_one({'Name':name},{'$set':{'Contact':contact}})
         if len(gender)!=0:
-            db.details.update_one({'Name':name},{'$set':{'Gender':gender}})
+            db.details1.update_one({'Name':name},{'$set':{'Gender':gender}})
         if len(place)!=0:
-            db.details.update_one({'Name':name},{'$set':{'Place':place}})
+            db.details1.update_one({'Name':name},{'$set':{'Place':place}})
             messagebox.showinfo("Success",'Details updated successfully')
     new3=Toplevel(root)
     new3.geometry('450x400')

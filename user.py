@@ -8,7 +8,7 @@ from random import randint
 
 try:
     client = pymongo.MongoClient("mongodb+srv://Bhavya:Ammulu1906@cluster0.7zd38m0.mongodb.net/?retryWrites=true&w=majority")
-    db = client.SoilFarming
+    db = client.SFA
     print("Connected to MongoDB")
 except:
     print("Database connection Error ")
@@ -40,7 +40,7 @@ def register(root,db):
         Username = [username]
         Password = [password]
         Email = [email]
-        SoilFarming={
+        SFA={
             'Id':Id[randint(0, (len(Id) - 1))],
             'Firstname': Firstname[(len(Firstname) - 1)],
             'Lastname': Lastname[(len(Lastname) - 1)],
@@ -67,14 +67,15 @@ def register(root,db):
         if len(password)==0:
             messagebox.showwarning('Warning','All fields are required(Except: Email)')
             return
-        if len(email)==0 and db.details.count_documents({'Id':id}, limit=1)==0:
-            result=db.details.insert_one({'Id':id,'Firstame':firstname,'Lastname':lastname,'Contact':contact,'Username':username,'Password':password})
-        elif len(email)!=0 and db.details.count_documents({'Id':id}, limit=1)==0:
-            result=db.details.insert_one(SoilFarming)
+        if len(email)==0 and db.details2.count_documents({'Id':id}, limit=1)==0:
+            result=db.details2.insert_one({'Id':id,'Firstame':firstname,'Lastname':lastname,'Contact':contact,'Username':username,'Password':password})
+        elif len(email)!=0 and db.details2.count_documents({'Id':id}, limit=1)==0:
+            result=db.details2.insert_one(SFA)
             messagebox.showinfo('Success','Registered successfully')
         else:
             messagebox.showerror('Error','Enter valid details')
             return
+        register.destroy()
     register=Toplevel()
     register.grab_set()
     register.title('Register')
@@ -125,6 +126,8 @@ def login(root,db):
             messagebox.showerror('Error', "Fields cannot be empty")
         elif usernameEntry.get() == 'user' and pswrdEntry.get() == '1234':
             messagebox.showinfo('Success', 'Welcome')
+            user.destroy()
+            import test
         else:
             messagebox.showerror('Error', 'Enter valid details')
 
@@ -148,97 +151,12 @@ def login(root,db):
     loginButton = ttk.Button(user, text='login', cursor='hand2', command=userlogin)
     loginButton.grid(row=2, columnspan=2)
 
-def viewsand(root,db):
-    view=Toplevel()
-    view.geometry('750x400+200+200')
-    view.title('Sand Details')
-    serialnolabel=Label(view,text='S.Num')
-    serialnolabel.grid(row=0,column=0,pady=10,padx=10)
-    typeofsoillabel=Label(view,text='Type_of_Soil')
-    typeofsoillabel.grid(row=0,column=2,pady=10,padx=10)
-    cropsgrownlabel=Label(view,text='Crops_grown')
-    cropsgrownlabel.grid(row=0,column=4,pady=10,padx=10)
-    nutrientlabel=Label(view,text='Nutrient_content')
-    nutrientlabel.grid(row=0,column=6,pady=10,padx=10)
-    dryingoutlabel=Label(view,text='Drying_out')
-    dryingoutlabel.grid(row=0,column=8,pady=10,padx=10)
-    waterretentionlabel=Label(view,text='Water_retention')
-    waterretentionlabel.grid(row=0,column=10,pady=10,padx=10)
-    whentogrowlabel=Label(view,text='When_to_grow')
-    whentogrowlabel.grid(row=0,column=12,pady=10,padx=10)
-    i=1
-    for x in db.details.find():
-        y=len(x)
-        print(x)
-        serialnolabel = Label(view, text=x['S.Num'])
-        serialnolabel.grid(row=i, column=0, pady=10, padx=10)
-        typeofsoillabel = Label(view, text=x['Type_of_Soil'])
-        typeofsoillabel.grid(row=i, column=2, pady=10, padx=10)
-        cropsgrownlabel = Label(view, text=x['Crops_grown'])
-        cropsgrownlabel.grid(row=i, column=4, pady=10, padx=10)
-        nutrientlabel = Label(view, text=x['Nutrient_Content'])
-        nutrientlabel.grid(row=i, column=6, pady=10, padx=10)
-        dryingoutlabel = Label(view, text=x['Drying_out'])
-        dryingoutlabel.grid(row=i, column=8, pady=10, padx=10)
-        waterretentionlabel = Label(view, text=x['Water_retention'])
-        waterretentionlabel.grid(row=i, column=10, pady=10, padx=10)
-        if y==10:
-            whentogrowlabel = Label(view, text=x['When_to_grow'])
-            whentogrowlabel.grid(row=i, column=12, pady=10, padx=10)
-        i += 1
-
-def viewdist(root,db):
-    new = Toplevel()
-    new.geometry('680x400+200+200')
-    new.title('Distributor Details')
-    namelabel=Label(new,text='Name')
-    namelabel.grid(row=0,column=0,pady=10,padx=10)
-    emaillabel=Label(new,text='Email')
-    emaillabel.grid(row=0,column=2,pady=10,padx=10)
-    phonelabel=Label(new,text='Contact')
-    phonelabel.grid(row=0,column=4,pady=10,padx=10)
-    genderlabel=Label(new,text='Gender')
-    genderlabel.grid(row=0,column=6,pady=10,padx=10)
-    placelabel=Label(new,text='Place')
-    placelabel.grid(row=0,column=8,pady=10,padx=10)
-    l = 1
-    for j in db.details.find():
-        k = len(j)
-        print(j)
-        namelabel = Label(new, text=j['Name'])
-        namelabel.grid(row=l, column=0, pady=10, padx=10)
-        emaillabel = Label(new, text=j['Email'])
-        emaillabel.grid(row=l, column=2, pady=10, padx=10)
-        phonelabel = Label(new, text=j['Contact'])
-        phonelabel.grid(row=l, column=4, pady=10, padx=10)
-        genderlabel = Label(new, text=j['Gender'])
-        genderlabel.grid(row=l, column=6, pady=10, padx=10)
-        if k == 8:
-            placelabel = Label(new, text=j['Place'])
-            placelabel.grid(row=l, column=8, pady=10, padx=10)
-        l += 1
-
-
-root=ttkthemes.ThemedTk()
-root.get_themes()
-root.set_theme('radiance')
-
-root.geometry('300x350+450+300')
-root.resizable(0,0)
-root.title('User window')
-
 
 registerButton=ttk.Button(root,text='Register',width=25,command=lambda: register(root,db))
 registerButton.grid(row=0,column=0,pady=15,padx=20)
 
 loginButton=ttk.Button(root,text='Login',width=25,command=lambda: login(root,db))
 loginButton.grid(row=1,column=0,pady=15,padx=20)
-
-viewButton=ttk.Button(root,text='View Sand Details',width=25,command=lambda: viewsand(root,db))
-viewButton.grid(row=2,column=0,pady=15,padx=20)
-
-viewdsButton=ttk.Button(root,text='View Distributor Details',width=25,command=lambda: viewdist(root,db))
-viewdsButton.grid(row=3,column=0,pady=15,padx=20)
 
 exitButton=ttk.Button(root,text='Exit',width=25,command=iexit)
 exitButton.grid(row=4,column=0,pady=15,padx=20)
