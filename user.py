@@ -8,7 +8,7 @@ from random import randint
 
 try:
     client = pymongo.MongoClient("mongodb+srv://Bhavya:Ammulu1906@cluster0.7zd38m0.mongodb.net/?retryWrites=true&w=majority")
-    db = client.SFA
+    db = client.SoilFarmingAgent
     print("Connected to MongoDB")
 except:
     print("Database connection Error ")
@@ -40,7 +40,7 @@ def register(root,db):
         Username = [username]
         Password = [password]
         Email = [email]
-        SFA={
+        SoilFarmingAgent={
             'Id':Id[randint(0, (len(Id) - 1))],
             'Firstname': Firstname[(len(Firstname) - 1)],
             'Lastname': Lastname[(len(Lastname) - 1)],
@@ -70,12 +70,13 @@ def register(root,db):
         if len(email)==0 and db.details2.count_documents({'Id':id}, limit=1)==0:
             result=db.details2.insert_one({'Id':id,'Firstame':firstname,'Lastname':lastname,'Contact':contact,'Username':username,'Password':password})
         elif len(email)!=0 and db.details2.count_documents({'Id':id}, limit=1)==0:
-            result=db.details2.insert_one(SFA)
-            messagebox.showinfo('Success','Registered successfully')
+            result=db.details2.insert_one(SoilFarmingAgent)
+
         else:
             messagebox.showerror('Error','Enter valid details')
             return
         register.destroy()
+        messagebox.showinfo('Success', 'Registered successfully')
     register=Toplevel()
     register.grab_set()
     register.title('Register')
@@ -83,37 +84,37 @@ def register(root,db):
     register.resizable(0,0)
     idLabel=Label(register,text='Id',font=('times new roman',15,'bold'))
     idLabel.grid(row=0,column=0,pady=15,padx=15)
-    idEntry=Entry(register,font=('arial',15))
+    idEntry=Entry(register,font=('calibri',15))
     idEntry.grid(row=0,column=1,pady=15,padx=15)
 
     firstnameLabel=Label(register,text='Firstname',font=('times new roman',15,'bold'))
     firstnameLabel.grid(row=1,column=0,pady=15,padx=15)
-    firstnameEntry=Entry(register,font=('arial',15))
+    firstnameEntry=Entry(register,font=('calibri',15))
     firstnameEntry.grid(row=1,column=1,pady=15,padx=15)
 
     lastnameLabel=Label(register,text='Lastname',font=('times new roman',15,'bold'))
     lastnameLabel.grid(row=2,column=0,pady=15,padx=15)
-    lastnameEntry=Entry(register,font=('arial',15))
+    lastnameEntry=Entry(register,font=('calibri',15))
     lastnameEntry.grid(row=2,column=1,pady=15,padx=15)
 
     phoneLabel=Label(register,text='Contact',font=('times new roman',15,'bold'))
     phoneLabel.grid(row=3,column=0,pady=15,padx=15)
-    phoneEntry=Entry(register,font=('arial',15))
+    phoneEntry=Entry(register,font=('calibri',15))
     phoneEntry.grid(row=3,column=1,pady=15,padx=15)
 
     usernameLabel=Label(register,text='Username',font=('times new roman',15,'bold'))
     usernameLabel.grid(row=4,column=0,pady=15,padx=15)
-    usernameEntry=Entry(register,font=('arial',15))
+    usernameEntry=Entry(register,font=('calibri',15))
     usernameEntry.grid(row=4,column=1,pady=15,padx=15)
 
     pswrdLabel=Label(register,text='Password',font=('times new roman',15,'bold'))
     pswrdLabel.grid(row=5,column=0,pady=15,padx=15)
-    pswrdEntry=Entry(register,font=('arial',15))
+    pswrdEntry=Entry(register,font=('calibri',15))
     pswrdEntry.grid(row=5,column=1,pady=15,padx=15)
 
     emailLabel=Label(register,text='Email Id',font=('times new roman',15,'bold'))
     emailLabel.grid(row=6,column=0,pady=15,padx=15)
-    emailEntry=Entry(register,font=('arial',15))
+    emailEntry=Entry(register,font=('calibri',15))
     emailEntry.grid(row=6,column=1,pady=15,padx=15)
 
     registerButton=ttk.Button(register,text='Register',compound=CENTER,command=regist)
@@ -149,8 +150,15 @@ def login(root,db):
     pswrdEntry.grid(row=1, column=1, pady=10, padx=10)
 
     loginButton = ttk.Button(user, text='login', cursor='hand2', command=userlogin)
-    loginButton.grid(row=2, columnspan=2)
+    loginButton.grid(row=2, columnspan=2,pady=10)
 
+root=ttkthemes.ThemedTk()
+root.get_themes()
+root.set_theme('radiance')
+
+root.geometry('300x350+450+300')
+root.resizable(0,0)
+root.title('User window')
 
 registerButton=ttk.Button(root,text='Register',width=25,command=lambda: register(root,db))
 registerButton.grid(row=0,column=0,pady=15,padx=20)
@@ -160,13 +168,5 @@ loginButton.grid(row=1,column=0,pady=15,padx=20)
 
 exitButton=ttk.Button(root,text='Exit',width=25,command=iexit)
 exitButton.grid(row=4,column=0,pady=15,padx=20)
-
-root=ttkthemes.ThemedTk()
-root.get_themes()
-root.set_theme('radiance')
-
-root.geometry('300x350+450+300')
-root.resizable(0,0)
-root.title('User window')
 
 root.mainloop()

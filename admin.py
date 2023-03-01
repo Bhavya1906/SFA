@@ -7,7 +7,7 @@ from random import randint
 
 try:
     client = pymongo.MongoClient("mongodb+srv://Bhavya:Ammulu1906@cluster0.7zd38m0.mongodb.net/?retryWrites=true&w=majority")
-    db = client.SFA
+    db = client.SoilFarmingAgent
     print("Connected to MongoDB")
 except:
     print("Database connection Error ")
@@ -27,20 +27,20 @@ def soil_det(root,db):
         global root
         ToS = typeofsoilEntry.get()
         CRE = cropsgrownEntry.get()
-        WTG = whentogrowEntry.get()
+        DTG = difftogrowEntry.get()
         NE = nutrientEntry.get()
         DOE = dryingoutEntry.get()
         WRE = waterretentionEntry.get()
         Type_of_Soil =[ToS]
         Crops_grown = [CRE]
-        When_to_grow = [WTG]
+        Difficult_to_grow = [DTG]
         Nutrient_Content = [NE]
         Drying_out = [DOE]
         Water_retention = [WRE]
-        SFA={
+        SoilFarmingAgent={
             'Type_of_Soil':Type_of_Soil[randint(0, (len(Type_of_Soil) - 1))],
             'Crops_grown':Crops_grown[randint(0, (len(Crops_grown) - 1))],
-            'When_to_grow':When_to_grow[randint(0, (len(When_to_grow) - 1))],
+            'Difficult_to_grow':Difficult_to_grow[randint(0, (len(Difficult_to_grow) - 1))],
             'Nutrient_Content':Nutrient_Content[randint(0, (len(Nutrient_Content) - 1))],
             'Drying_out':Drying_out[randint(0, len(Drying_out) - 1)],
             'Water_retention':Water_retention[randint(0, len(Water_retention) - 1)]
@@ -60,17 +60,18 @@ def soil_det(root,db):
         if (len(Water_retention)==0):
             messagebox.showwarning('Warning','Fields cannot be empty(Except:When_to_grow)')
             return
-        if len(When_to_grow)==0 and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
+        if len(Difficult_to_grow)==0 and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
             result = db.details.insert_one(
-                {'Type_of_soil': ToS, 'Crops_grown': CRE, 'When_to_grow': WTG, 'Nutrient_Content': NE,
+                {'Type_of_soil': ToS, 'Crops_grown': CRE, 'Difficult_to_grow': DTG, 'Nutrient_Content': NE,
                  'Drying_out': DOE, 'Water_retention': WRE})
-        elif len(When_to_grow)!=0and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
-            result = db.details.insert_one(SFA)
-            messagebox.showinfo('Success','Data added successfully')
-
+        elif len(Difficult_to_grow)!=0and db.details.count_documents({'Type_of_Soil':ToS}, limit=1)==0:
+            result = db.details.insert_one(SoilFarmingAgent)
+            messagebox.showinfo('Success', 'Data added successfully')
+            new.destroy()
         else:
             messagebox.showerror('Error','All details are required')
             return
+
     new=Toplevel(root)
     new.geometry('530x450')
     new.resizable(0,0)
@@ -101,20 +102,20 @@ def soil_det(root,db):
     waterretentionEntry=Entry(new,font=('calibri',15))
     waterretentionEntry.grid(row=4,column=1,pady=10,padx=10)
 
-    whentogrowlabel=Label(new,text='When_to_grow',font=('times new roman',20,'bold'))
-    whentogrowlabel.grid(row=5,column=0,pady=10,padx=10)
-    whentogrowEntry=Entry(new,font=('calibri',15))
-    whentogrowEntry.grid(row=5,column=1,pady=10,padx=10)
+    difftogrowlabel=Label(new,text='Difficult_to_grow',font=('times new roman',20,'bold'))
+    difftogrowlabel.grid(row=5,column=0,pady=10,padx=10)
+    difftogrowEntry=Entry(new,font=('calibri',15))
+    difftogrowEntry.grid(row=5,column=1,pady=10,padx=10)
 
     submitButton=ttk.Button(new,text='Submit',command=post_data)
-    submitButton.grid(row=6,columnspan=2)
+    submitButton.grid(row=6,columnspan=2,pady=10)
 
 def update_soil(root,db):
     def update_data():
         global root
         ToS = typeofsoilEntry.get()
         CRE = cropsgrownEntry.get()
-        WTG = whentogrowEntry.get()
+        DTG = difftogrowEntry.get()
         NE = nutrientEntry.get()
         DOE = dryingoutEntry.get()
         WRE = waterretentionEntry.get()
@@ -125,8 +126,8 @@ def update_soil(root,db):
             db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Type_of_soil':ToS}})
         if len(CRE)!=0:
             db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Crops_grown':CRE}})
-        if len(WTG)!=0:
-            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'When_to_grow':WTG}})
+        if len(DTG)!=0:
+            db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Difficult_to_grow':WTG}})
         if len(NE)!=0:
             db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Nutrient_Content':NE}})
         if len(DOE)!=0:
@@ -134,6 +135,7 @@ def update_soil(root,db):
         if len(WRE)!=0:
             db.details.update_one({'Type_of_Soil':ToS},{'$set':{'Water_retention':WRE}})
             messagebox.showinfo("Success",'Info updated successfully')
+            new1.destroy()
     new1=Toplevel(root)
     new1.geometry('530x450')
     new1.resizable(0,0)
@@ -164,13 +166,13 @@ def update_soil(root,db):
     waterretentionEntry=Entry(new1,font=('calibri',15))
     waterretentionEntry.grid(row=5,column=1,pady=10,padx=10)
 
-    whentogrowlabel=Label(new1,text='When_to_grow',font=('times new roman',20,'bold'))
-    whentogrowlabel.grid(row=6,column=0,pady=10,padx=10)
-    whentogrowEntry=Entry(new1,font=('calibri',15))
-    whentogrowEntry.grid(row=6,column=1,pady=10,padx=10)
+    difftogrowlabel=Label(new1,text='Difficult_to_grow',font=('times new roman',20,'bold'))
+    difftogrowlabel.grid(row=6,column=0,pady=10,padx=10)
+    difftogrowEntry=Entry(new1,font=('calibri',15))
+    difftogrowEntry.grid(row=6,column=1,pady=10,padx=10)
 
     submitButton=ttk.Button(new1,text='Update',command=update_data)
-    submitButton.grid(row=7,columnspan=2)
+    submitButton.grid(row=7,columnspan=2,pady=10)
 
 def dist_det(root,db):
     def dist_data():
@@ -185,7 +187,7 @@ def dist_det(root,db):
         Contact = [contact]
         Gender = [gender]
         Place = [place]
-        SFA={
+        SoilFarmingAgent={
             'Name':Name[randint(0, (len(Name) - 1))],
             'Email':Email[randint(0, (len(Email) - 1))],
             'Contact':Contact[randint(0, (len(Contact) - 1))],
@@ -207,8 +209,9 @@ def dist_det(root,db):
         if len(email)==0 and db.details1.count_documents({'Id':id}, limit=1)==0:
             result=db.details1.insert_one({'Name':name,'Place':place,'Gender':gender,'Contact':contact})
         elif len(email)!=0 and db.details1.count_documents({'Name':name}, limit=1)==0:
-            result=db.details1.insert_one(SFA)
+            result=db.details1.insert_one(SoilFarmingAgent)
             messagebox.showinfo('Success','Data added successfully')
+            new2.destroy()
         else:
             messagebox.showerror('Error','All details are required')
             return
@@ -243,7 +246,7 @@ def dist_det(root,db):
     placeEntry.grid(row=4,column=1,pady=10,padx=10)
 
     submitButton=ttk.Button(new2,text='Submit',command=dist_data)
-    submitButton.grid(row=5,columnspan=2)
+    submitButton.grid(row=5,columnspan=2,pady=10)
 
 def update_dist(rrot,db):
     def update():
@@ -268,6 +271,7 @@ def update_dist(rrot,db):
         if len(place)!=0:
             db.details1.update_one({'Name':name},{'$set':{'Place':place}})
             messagebox.showinfo("Success",'Details updated successfully')
+            new3.destroy()
     new3=Toplevel(root)
     new3.geometry('450x400')
     new3.resizable(0,0)
@@ -299,7 +303,7 @@ def update_dist(rrot,db):
     placeEntry.grid(row=4,column=1,pady=10,padx=10)
 
     submitButton=ttk.Button(new3,text='Update',command=update)
-    submitButton.grid(row=5,columnspan=2)
+    submitButton.grid(row=5,columnspan=2,pady=10)
 
 root = ttkthemes.ThemedTk()
 root.get_themes()

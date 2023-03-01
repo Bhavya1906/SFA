@@ -8,7 +8,7 @@ from random import randint
 
 try:
     client = pymongo.MongoClient("mongodb+srv://Bhavya:Ammulu1906@cluster0.7zd38m0.mongodb.net/?retryWrites=true&w=majority")
-    db = client.SFA
+    db = client.SoilFarmingAgent
     print("Connected to MongoDB")
 except:
     print("Database connection Error ")
@@ -25,7 +25,7 @@ def iexit():
 
 def viewsand(root,db):
     view=Toplevel()
-    view.geometry('750x400+200+200')
+    view.geometry('1050x480+200+200')
     view.title('Sand Details')
     typeofsoillabel=Label(view,text='Type_of_Soil')
     typeofsoillabel.grid(row=0,column=0,pady=10,padx=10)
@@ -37,8 +37,8 @@ def viewsand(root,db):
     dryingoutlabel.grid(row=0,column=6,pady=10,padx=10)
     waterretentionlabel=Label(view,text='Water_retention')
     waterretentionlabel.grid(row=0,column=8,pady=10,padx=10)
-    whentogrowlabel=Label(view,text='When_to_grow')
-    whentogrowlabel.grid(row=0,column=10,pady=10,padx=10)
+    difftogrowlabel=Label(view,text='Difficult_to_grow')
+    difftogrowlabel.grid(row=0,column=10,pady=10,padx=10)
     i=1
     for x in db.details.find():
         y=len(x)
@@ -53,13 +53,13 @@ def viewsand(root,db):
         dryingoutlabel.grid(row=i, column=6, pady=10, padx=10)
         waterretentionlabel = Label(view, text=x['Water_retention'])
         waterretentionlabel.grid(row=i, column=8, pady=10, padx=10)
-        whentogrowlabel = Label(view, text=x['When_to_grow'])
-        whentogrowlabel.grid(row=i, column=10, pady=10, padx=10)
+        difftogrowlabel = Label(view, text=x['Difficult_to_grow'])
+        difftogrowlabel.grid(row=i, column=10, pady=10, padx=10)
         i += 1
 
 def viewdist(root,db):
     new = Toplevel()
-    new.geometry('680x400+200+200')
+    new.geometry('630x680+200+200')
     new.title('Distributor Details')
     namelabel=Label(new,text='Name')
     namelabel.grid(row=0,column=0,pady=10,padx=10)
@@ -105,5 +105,6 @@ viewdsButton.grid(row=3,column=0,pady=15,padx=20)
 
 exitButton=ttk.Button(root,text='Exit',width=25,command=iexit)
 exitButton.grid(row=4,column=0,pady=15,padx=20)
+
 
 root.mainloop()
