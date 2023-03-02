@@ -41,7 +41,7 @@ def user():
     #window.destroy()
     import user
 
-window.geometry('1530x980+0+0')
+window.geometry('1530x980+200+0')
 window.resizable(False,False)
 window.title('Agri shop for Farmers')
 

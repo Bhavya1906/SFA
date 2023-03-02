@@ -71,12 +71,12 @@ def register(root,db):
             result=db.details2.insert_one({'Id':id,'Firstame':firstname,'Lastname':lastname,'Contact':contact,'Username':username,'Password':password})
         elif len(email)!=0 and db.details2.count_documents({'Id':id}, limit=1)==0:
             result=db.details2.insert_one(SoilFarmingAgent)
-
+            messagebox.showinfo('Success', 'Registered successfully')
+            register.destroy()
         else:
             messagebox.showerror('Error','Enter valid details')
             return
-        register.destroy()
-        messagebox.showinfo('Success', 'Registered successfully')
+
     register=Toplevel()
     register.grab_set()
     register.title('Register')
@@ -123,14 +123,18 @@ def register(root,db):
 
 def login(root,db):
     def userlogin():
-        if usernameEntry.get() == '' or pswrdEntry.get() == '':
-            messagebox.showerror('Error', "Fields cannot be empty")
-        elif usernameEntry.get() == 'user' and pswrdEntry.get() == '1234':
-            messagebox.showinfo('Success', 'Welcome')
-            user.destroy()
-            import test
-        else:
-            messagebox.showerror('Error', 'Enter valid details')
+        username=usernameEntry.get()
+        password=pswrdEntry.get()
+        for i in db.details2.find():
+            if username == '' or password == '':
+                messagebox.showerror('Error', "Fields cannot be empty")
+            elif username == i['Username'] and password == i['Password']:
+                messagebox.showinfo('Success', 'Welcome')
+                user.destroy()
+                import test
+            else:
+                pass
+                #messagebox.showerror('Error', 'Enter valid details')
 
 
     user = Toplevel()
